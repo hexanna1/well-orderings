@@ -1,0 +1,46 @@
+import gzip
+import unittest
+from pathlib import Path
+
+from encoder_registry import ENCODER_SPECS
+from ordinal_bundle import BUNDLE_MAGIC, OrdinalSkeleton, decode_bundle, encode_bundle
+
+
+DATA = Path(__file__).resolve().parents[1] / "docs" / "data"
+
+
+class WebsiteRowDataTests(unittest.TestCase):
+    def test_encoder_bundles_are_complete_and_well_formed(self) -> None:
+        for spec in ENCODER_SPECS.values():
+            path = DATA / spec.bundle_filename
+            bundle = gzip.decompress(path.read_bytes())
+            skeleton = decode_bundle(bundle)
+            self.assertEqual(skeleton.maximum, 200000)
+            self.assertEqual(len(skeleton.ordinal_ranks), 17984)
+            self.assertEqual(
+                skeleton.admissible_raw_codes is not None,
+                spec.name in {"buchholz_1", "buchholz", "ebocf"},
+            )
+
+    def test_bundle_round_trip(self) -> None:
+        heights = [30, 31, 32]
+        encoded = encode_bundle(
+            [2, 3, 5],
+            heights,
+            5,
+            [1, 3, 4],
+        )
+        self.assertEqual(encoded[:4], BUNDLE_MAGIC)
+        self.assertEqual(
+            decode_bundle(encoded),
+            OrdinalSkeleton(
+                maximum=5,
+                ordinal_ranks=(0, 1, 2),
+                ordinal_heights=(30, 31, 32),
+                admissible_raw_codes=(1, 3, 4),
+            ),
+        )
+
+
+if __name__ == "__main__":
+    unittest.main()
