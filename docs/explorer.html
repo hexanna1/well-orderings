@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cantor Explorer</title>
+<link rel="icon" href="favicons/cantor.svg" type="image/svg+xml">
+<script src="katex_loader.js" data-font-sizes="3 4"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="tool-page explorer-page">
+<main id="shell">
+<header class="tool-header">
+<a class="site-mark" href="index.html">Well-Orderings</a>
+<span aria-hidden="true">/</span>
+<h1 class="tool-title">Ordinal Explorer</h1>
+</header>
+<nav id="nav" aria-label="Encoders"></nav>
+<div id="current" aria-live="polite"></div>
+<div id="history-line"><span id="history"></span></div>
+<div id="rows"></div>
+<div id="examples"></div>
+<p id="shortcut-hint">Shortcuts: <kbd>0</kbd>-<kbd>5</kbd> choose α[n], <kbd>p</kbd> previous, <kbd>n</kbd> next, <kbd>f</kbd> first, <kbd>l</kbd> last, <kbd>r</kbd> reset.</p>
+</main>
+<script type="module" src="explorer.js"></script>
+</body>
+</html>
