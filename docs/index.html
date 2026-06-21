@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Well-Orderings</title>
+<link rel="icon" href="favicons/about.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js"></script>
+<style>
+html {
+  overscroll-behavior-y: none;
+}
+body {
+  margin: 0 auto;
+  max-width: 44em;
+  padding: 1em;
+  background: #fafafa;
+  font-size: 16px;
+  line-height: 1.45;
+}
+a {
+  color: #0645ad;
+}
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+nav {
+  margin: 0 0 1em;
+}
+nav a {
+  margin-right: 0.5em;
+}
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 0 1em 0.2em 0;
+  text-align: left;
+  vertical-align: middle;
+}
+</style>
+</head>
+<body>
+<nav>
+<a href="https://github.com/hexanna1/well-orderings">GitHub</a>
+</nav>
+<p>
+A collection of <a href="well_orderings.html">explicit well-orderings</a> of the natural numbers,
+from Cantor normal form to extended Buchholz notation. Each encoding gives a bijection from natural
+numbers to ordinal notations, additive with respect to Hessenberg natural sum.
+</p>
+<p>
+Separately, the <a href="explorer.html">ordinal notation explorer</a> lets you navigate the notation
+systems via fundamental sequences.
+</p>
+<table>
+<tr><th>Encoding</th><th>Notation</th><th>Limit</th></tr>
+<tr><td><a href="well_orderings.html#cantor">Cantor</a></td><td>Cantor</td><td>\(\varepsilon_0\)</td></tr>
+<tr><td><a href="well_orderings.html#binary">Binary</a></td><td>Binary Veblen</td><td>\(\Gamma_0\)</td></tr>
+<tr><td><a href="well_orderings.html#finitary">Finitary</a></td><td>Finitary Veblen</td><td>small Veblen ordinal</td></tr>
+<tr><td><a href="well_orderings.html#transfinitary">Transfinitary</a></td><td>Transfinitary Veblen</td><td>large Veblen ordinal</td></tr>
+<tr><td><a href="well_orderings.html#buchholz_1">Buchholz₁</a></td><td>Buchholz (one uncountable)</td><td>Bachmann-Howard ordinal</td></tr>
+<tr><td><a href="well_orderings.html#buchholz">Buchholz</a></td><td>Buchholz (\(\omega\)-many uncountables)</td><td>Buchholz ordinal</td></tr>
+<tr><td><a href="well_orderings.html#ebocf">EBOCF</a></td><td>Extended Buchholz</td><td>\(\psi_0(\Lambda)\)</td></tr>
+</table>
+<p>
+<strong>Cantor:</strong> Read prime factorization hereditarily as Cantor normal form. A factor \(p_m^k\) contributes
+\(\omega^\alpha\cdot k\), where \(\alpha\) is obtained by decoding \(m\) recursively. Collect the
+resulting finite sum in Cantor normal form.
+</p>
+<p>
+<strong>Binary:</strong> Read prime factorization hereditarily as Veblen normal form. A prime-index node uses the odd/even
+prime-color split to decode a raw argument \(\gamma\) and Veblen index \(\beta\), giving
+\(\varphi_\beta(\gamma)\). Use the canonical finite-tail repair for fixed-point arguments excluded
+by Veblen normal form.
+</p>
+<p>
+<strong>Finitary:</strong> Starting from Binary, replace its odd/even prime-color split by countably many prime colors
+\(p_{2^j(2i-1)}\), ordered by finite Veblen argument slots from the active/rightmost slot outward.
+Read the resulting finite argument strings in small-Veblen normal form, with the same active
+finite-tail repair.
+</p>
+<p>
+<strong>Transfinitary:</strong> Starting from Finitary, replace finite argument colors by finite matrix-column atoms. Each atom uses
+the Binary odd/even prime-color split to decode an ordinal position \(\iota\) and a principal-term
+index for the value above \(\iota\). Group atoms with the same position into the natural code of that
+value, then read the finite-support matrix in large-Veblen normal form, with the same active-column
+finite-tail repair.
+</p>
+<p>
+<strong>Buchholz₁:</strong> Decode a raw hereditary \(\psi\)-forest with two levels, \(\psi_0\) and \(\psi_1\), for the
+one-uncountable Buchholz fragment. For each level \(\nu\), scan the raw forest sequence and retain
+exactly the terms admissible as \(\psi_\nu\)-arguments. Decode the final natural number by finite
+decreasing sums of retained \(\psi_0\)-terms.
+</p>
+<p>
+<strong>Buchholz:</strong> Starting from Buchholz₁, replace the two raw \(\psi\)-levels by all levels
+\(\psi_\nu\) with \(\nu<\omega\), using prime colors \(p_{2^\nu(2m-1)}\), where \(m\) gives the
+hereditary argument. For each finite level \(\nu\), scan the raw forest sequence and retain exactly
+the terms admissible as \(\psi_\nu\)-arguments. Decode the final natural number by finite decreasing
+sums of retained \(\psi_0\)-terms.
+</p>
+<p>
+<strong>EBOCF:</strong> Starting from Buchholz, let the \(\psi\)-levels themselves be ordinal terms. Decode a raw hereditary
+forest by splitting each prime index into raw level and argument codes, giving raw terms
+\(\psi_\nu(\alpha)\). For each legal level \(\nu\), scan the raw forest sequence and retain exactly
+the admissible arguments at that level. Decode the final natural number by finite decreasing sums
+of retained \(\psi_0\)-terms.
+</p>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  if (typeof renderMathInElement !== "function") {
+    return;
+  }
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "\\(", right: "\\)", display: false}
+    ],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

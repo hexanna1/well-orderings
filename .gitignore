@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.tex
+!docs/*.tex
+*.pdf
+*.aux
+*.log
+_*.sh
+_*.md
+AGENTS.md

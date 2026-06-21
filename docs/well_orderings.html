@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+const encoderEntries = [
+  {
+    name: "cantor",
+    label: "cantor [ε₀]",
+    shortLabel: "ε₀",
+    favicon: "favicons/cantor.svg",
+    title: "Cantor Well-Ordering"
+  },
+  {
+    name: "binary",
+    label: "binary [Γ₀]",
+    shortLabel: "Γ₀",
+    favicon: "favicons/binary.svg",
+    title: "Binary Veblen Well-Ordering"
+  },
+  {
+    name: "finitary",
+    label: "finitary [SVO]",
+    shortLabel: "SVO",
+    favicon: "favicons/finitary.svg",
+    title: "Finitary Veblen Well-Ordering"
+  },
+  {
+    name: "transfinitary",
+    label: "transfinitary [LVO]",
+    shortLabel: "LVO",
+    favicon: "favicons/transfinitary.svg",
+    title: "Transfinitary Veblen Well-Ordering"
+  },
+  {
+    name: "buchholz_1",
+    label: "buchholz₁ [BHO]",
+    shortLabel: "BHO",
+    favicon: "favicons/buchholz_1.svg",
+    title: "Buchholz₁ Well-Ordering"
+  },
+  {
+    name: "buchholz",
+    label: "buchholz [BO]",
+    shortLabel: "BO",
+    favicon: "favicons/buchholz.svg",
+    title: "Buchholz Well-Ordering"
+  },
+  {
+    name: "ebocf",
+    label: "ebocf [ψ₀(Λ)]",
+    shortLabel: "ψ₀(Λ)",
+    favicon: "favicons/ebocf.svg",
+    title: "Extended Buchholz Well-Ordering"
+  }
+];
+const encoderMetadata = Object.fromEntries(encoderEntries.map((entry) => [entry.name, entry]));
+
+if ("scrollRestoration" in window.history) {
+  window.history.scrollRestoration = "manual";
+}
+
+function selectedEncoder() {
+  const hash = window.location.hash.slice(1);
+  if (Object.prototype.hasOwnProperty.call(encoderMetadata, hash)) {
+    return hash;
+  }
+  if (hash !== "" && window.history && window.history.replaceState) {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+  return "cantor";
+}
+
+function applyEncoderMetadata(name) {
+  const metadata = encoderMetadata[name];
+  let favicon = document.getElementById("favicon");
+  if (favicon === null) {
+    favicon = document.createElement("link");
+    favicon.id = "favicon";
+    favicon.rel = "icon";
+    favicon.type = "image/svg+xml";
+    document.head.appendChild(favicon);
+  }
+  document.title = metadata.title;
+  favicon.href = metadata.favicon;
+}
+
+applyEncoderMetadata(selectedEncoder());
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js"></script>
+<style>
+html {
+  overscroll-behavior-y: none;
+}
+body {
+  margin: 0;
+  font-size: 16px;
+  background: #fafafa;
+  --column-width: 17em;
+}
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fafafa;
+  margin: 0 0 0.6em;
+}
+nav a {
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5em;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+  vertical-align: middle;
+}
+nav a.active {
+  font-weight: bold;
+}
+.sort-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+.sort-control input {
+  margin: 0;
+}
+nav a:focus:not(:focus-visible) {
+  outline: none;
+}
+.short-label {
+  display: none;
+}
+.full-label,
+.short-label {
+  line-height: 1;
+}
+#rows {
+  display: grid;
+  grid-template-columns: repeat(3, var(--column-width));
+  column-gap: 2em;
+  row-gap: 0.3em;
+  align-items: center;
+}
+#shell {
+  display: table;
+  margin: 0 auto;
+}
+.row {
+  white-space: nowrap;
+}
+@media (max-width: 700px) {
+  nav {
+    text-align: center;
+  }
+  .sort-control {
+    margin-right: 0;
+  }
+  .full-label {
+    display: none;
+  }
+  .short-label {
+    display: inline;
+  }
+  #rows {
+    grid-template-columns: var(--column-width);
+    justify-content: center;
+  }
+}
+</style>
+</head>
+<body>
+<div id="shell">
+<nav id="nav"></nav>
+<div id="rows"></div>
+</div>
+<script>
+const rowPattern = /^\s*(\d+)\s*&\\mapsto\s*(.*?)&\\\\\s*$/gm;
+const nav = document.getElementById("nav");
+nav.innerHTML = encoderEntries.map(({name, label, shortLabel}) =>
+  `<a href="#${name}" aria-label="${label}"><span class="full-label">${label}</span><span class="short-label">${shortLabel}</span></a>`
+).join(" ");
+nav.insertAdjacentHTML("beforeend", ' <a href="index.html">about</a>');
+nav.insertAdjacentHTML("beforeend", ' <label class="sort-control" aria-label="ordinal sort"><input id="sort-by-ordinal" type="checkbox"> <span class="full-label">ordinal sort</span><span class="short-label">ord</span></label>');
+const links = Array.from(nav.querySelectorAll("a"));
+const rows = document.getElementById("rows");
+const sortByOrdinal = document.getElementById("sort-by-ordinal");
+const textCache = new Map();
+let currentEncoder = null;
+let currentOrder = null;
+let loadToken = 0;
+const edgeThreshold = 8;
+
+function highlightEncoder(name) {
+  applyEncoderMetadata(name);
+  for (const link of links) {
+    link.classList.toggle("active", link.hash === `#${name}`);
+  }
+}
+
+function selectedOrder() {
+  return sortByOrdinal.checked ? "ordinal" : "number";
+}
+
+function buildRows(text, order) {
+  const fragment = document.createDocumentFragment();
+  const parsedRows = Array.from(text.matchAll(rowPattern), (match) => ({
+    n: Number(match[1]),
+    latex: match[2]
+  }));
+
+  if (order === "number") {
+    parsedRows.sort((a, b) => a.n - b.n);
+  }
+
+  for (const parsedRow of parsedRows) {
+    const row = document.createElement("div");
+    row.className = "row";
+    row.dataset.n = String(parsedRow.n);
+    fragment.appendChild(row);
+    const latex = `${parsedRow.n} \\mapsto ${parsedRow.latex}`;
+    if (window.katex && typeof window.katex.render === "function") {
+      katex.render(latex, row, {
+        throwOnError: false,
+        output: "html",
+        strict: "ignore"
+      });
+    } else {
+      row.textContent = latex;
+    }
+  }
+
+  return fragment;
+}
+
+function documentHeight() {
+  return Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+}
+
+function viewportAnchorY(scrollProgress) {
+  const navBottom = nav.getBoundingClientRect().bottom;
+  const viewportHeightBelowNav = Math.max(0, window.innerHeight - navBottom);
+  return navBottom + viewportHeightBelowNav * scrollProgress;
+}
+
+function scrollAnchor() {
+  const maxScroll = documentHeight() - window.innerHeight;
+  if (maxScroll <= 0 || rows.children.length === 0) {
+    return null;
+  }
+  if (window.scrollY <= edgeThreshold) {
+    return {kind: "top"};
+  }
+
+  const scrollProgress = window.scrollY / maxScroll;
+  const anchorY = viewportAnchorY(scrollProgress);
+  let best = null;
+  let bestRect = null;
+  let bestIndex = 0;
+  let bestDistance = Infinity;
+
+  for (const [index, row] of Array.from(rows.children).entries()) {
+    const rect = row.getBoundingClientRect();
+    const center = (rect.top + rect.bottom) / 2;
+    const distance = Math.abs(center - anchorY);
+    if (distance < bestDistance) {
+      best = row;
+      bestRect = rect;
+      bestIndex = index;
+      bestDistance = distance;
+    }
+  }
+
+  return best === null ? null : {
+    kind: "row",
+    index: bestIndex,
+    rowFraction: Math.min(1, Math.max(0, (anchorY - bestRect.top) / bestRect.height)),
+    scrollProgress
+  };
+}
+
+function restoreAnchor(anchor) {
+  if (anchor === null) {
+    return;
+  }
+  if (anchor.kind === "top") {
+    window.scrollTo(0, 0);
+    return;
+  }
+  const index = Math.min(anchor.index, rows.children.length - 1);
+  const target = index < 0 ? null : rows.children[index];
+  if (target == null) {
+    return;
+  }
+
+  const rect = target.getBoundingClientRect();
+  window.scrollTo(0, window.scrollY + rect.top + rect.height * anchor.rowFraction - viewportAnchorY(anchor.scrollProgress));
+}
+
+async function loadSelectedEncoder() {
+  const name = selectedEncoder();
+  const order = selectedOrder();
+  const token = ++loadToken;
+  if (name === currentEncoder && order === currentOrder) {
+    highlightEncoder(name);
+    return;
+  }
+  try {
+    let text = textCache.get(name);
+    if (text === undefined) {
+      const response = await fetch(`${name}.tex`);
+      if (!response.ok) {
+        throw new Error(`Could not fetch ${name}.tex`);
+      }
+      text = await response.text();
+      textCache.set(name, text);
+    }
+    if (token !== loadToken) {
+      return;
+    }
+    const anchor = currentEncoder === null ? null : scrollAnchor();
+    const fragment = buildRows(text, order);
+    rows.replaceChildren(fragment);
+    currentEncoder = name;
+    currentOrder = order;
+    highlightEncoder(name);
+    restoreAnchor(anchor);
+  } catch (error) {
+    console.error(`Failed to load ${name}`, error);
+  }
+}
+
+highlightEncoder(selectedEncoder());
+window.addEventListener("DOMContentLoaded", () => {
+  loadSelectedEncoder();
+  window.addEventListener("hashchange", loadSelectedEncoder);
+  sortByOrdinal.addEventListener("change", loadSelectedEncoder);
+});
+</script>
+</body>
+</html>
