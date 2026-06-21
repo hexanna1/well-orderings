@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.tex
+*.pdf
+*.aux
+*.log
+_*
+AGENTS.md
