@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cantor Lookup</title>
+<link rel="icon" href="favicons/cantor.svg" type="image/svg+xml">
+<script src="katex_loader.js" data-font-sizes="3 4"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="tool-page lookup-page">
+<main id="shell">
+<header class="tool-header">
+<a class="site-mark" href="index.html">Well-Orderings</a>
+<span aria-hidden="true">/</span>
+<h1 class="tool-title">Lookup</h1>
+</header>
+<nav id="nav" aria-label="Encoders and lookup mode"></nav>
+<div class="lookup-random-controls">
+<button id="random-number" type="button" aria-keyshortcuts="r" disabled>Random</button>
+<span class="lookup-random-limit" role="group" aria-label="Random prime limit">
+<button type="button" data-limit="10000" aria-pressed="false" title="Random primes ≤ 10,000" disabled>10⁴</button>
+<button type="button" data-limit="100000" aria-pressed="false" title="Random primes ≤ 100,000" disabled>10⁵</button>
+<button type="button" data-limit="1000000" aria-pressed="false" title="Random primes ≤ 1,000,000" disabled>10⁶</button>
+<button type="button" data-limit="10000000" aria-pressed="false" title="Random primes ≤ 10,000,000" disabled>10⁷</button>
+<button type="button" data-limit="100000000" aria-pressed="false" title="Random primes ≤ 100,000,000" disabled>10⁸</button>
+<button type="button" data-limit="1000000000" aria-pressed="false" title="Random primes ≤ 1,000,000,000" disabled>10⁹</button>
+</span>
+</div>
+<p id="lookup-status" role="status" aria-live="polite">Loading lookup data…</p>
+<div id="lookup-results" hidden></div>
+</main>
+<form id="lookup-form" class="page-navigation" aria-label="Prime navigation" novalidate>
+<div class="page-navigation-group lookup-number-navigation">
+<span class="lookup-navigation-group">
+<button id="first-number" class="page-navigation-button" type="button" aria-label="First prime" aria-keyshortcuts="f" aria-disabled="true" disabled>|&lt;</button>
+<button id="previous-number" class="page-navigation-button" type="button" aria-label="Previous prime" aria-keyshortcuts="p ArrowLeft" aria-disabled="true" disabled>&lt;</button>
+</span>
+<input id="lookup-number" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Natural number" enterkeyhint="go" required disabled>
+<span class="lookup-navigation-group">
+<button id="next-number" class="page-navigation-button" type="button" aria-label="Next prime" aria-keyshortcuts="n ArrowRight" aria-disabled="true" disabled>&gt;</button>
+<button id="last-number" class="page-navigation-button" type="button" aria-label="Last prime" aria-keyshortcuts="l" aria-disabled="true" disabled>&gt;|</button>
+</span>
+</div>
+</form>
+<script type="module" src="lookup.js"></script>
+</body>
+</html>
