@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cantor Well-Ordering</title>
+<link rel="icon" href="favicons/cantor.svg" type="image/svg+xml">
+<style media="(prefers-reduced-motion: no-preference)">
+@view-transition { navigation: auto; }
+</style>
+<link rel="expect" href="#shell" blocking="render" media="(prefers-reduced-motion: no-preference)">
+<script src="katex_loader.js" data-font-sizes="3"></script>
+<link rel="stylesheet" href="styles.css">
+<script src="related_nav.js" defer></script>
+</head>
+<body class="tool-page ordering-page">
+<main id="shell">
+<header class="tool-header">
+<a class="site-mark" href="index.html">Well-Orderings</a>
+<span aria-hidden="true">/</span>
+<nav class="related-nav" aria-label="Related tools">
+<h1 class="tool-title"><button class="related-menu-toggle" type="button" aria-expanded="false" aria-controls="related-menu-links">Encodings</button></h1>
+<div id="related-menu-links" class="related-menu-links" hidden>
+<a href="lookup.html">Lookup</a>
+<a href="explorer.html">Ordinal Explorer</a>
+</div>
+</nav>
+</header>
+<nav id="nav" aria-label="Encoders"></nav>
+<p id="encoding-status" class="tool-status" role="status">Loading encodings…</p>
+<div id="rows"></div>
+</main>
+<div id="page-navigation" class="page-navigation" role="group" aria-label="Page navigation">
+<div class="page-navigation-group">
+<button id="page-first" class="page-navigation-button" type="button" aria-label="First page">|&lt;</button>
+<button id="page-previous" class="page-navigation-button" type="button" aria-label="Previous page">&lt;</button>
+<button id="page-next" class="page-navigation-button" type="button" aria-label="Next page">&gt;</button>
+<button id="page-last" class="page-navigation-button" type="button" aria-label="Last page">&gt;|</button>
+<span id="page-number" class="page-number"></span>
+</div>
+</div>
+<script type="module" src="well_orderings.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e1156a581aca4e9bb358a3655fc3714b"}'></script>
+</body>
+</html>

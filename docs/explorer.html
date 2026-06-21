@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cantor Explorer</title>
+<link rel="icon" href="favicons/cantor.svg" type="image/svg+xml">
+<style media="(prefers-reduced-motion: no-preference)">
+@view-transition { navigation: auto; }
+</style>
+<link rel="expect" href="#shell" blocking="render" media="(prefers-reduced-motion: no-preference)">
+<script src="katex_loader.js" data-font-sizes="3 4"></script>
+<link rel="stylesheet" href="styles.css">
+<script src="related_nav.js" defer></script>
+</head>
+<body class="tool-page explorer-page">
+<main id="shell">
+<header class="tool-header">
+<a class="site-mark" href="index.html">Well-Orderings</a>
+<span aria-hidden="true">/</span>
+<nav class="related-nav" aria-label="Related tools">
+<h1 class="tool-title"><button class="related-menu-toggle" type="button" aria-expanded="false" aria-controls="related-menu-links">Ordinal Explorer</button></h1>
+<div id="related-menu-links" class="related-menu-links" hidden>
+<a href="well_orderings.html">Encodings</a>
+<a href="lookup.html">Lookup</a>
+</div>
+</nav>
+</header>
+<nav id="nav" aria-label="Encoders"></nav>
+<p id="explorer-status" class="tool-status" role="status">Loading the ordinal explorer…</p>
+<div id="current" aria-live="polite"></div>
+<div id="history-line"><span id="history"></span></div>
+<div id="rows"></div>
+<div id="examples"></div>
+<p id="shortcut-hint">Shortcuts: <kbd>0</kbd>-<kbd>5</kbd> choose α[n], <kbd>p</kbd> previous, <kbd>n</kbd> next, <kbd>f</kbd> first, <kbd>l</kbd> last, <kbd>r</kbd> reset.</p>
+</main>
+<script type="module" src="explorer.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e1156a581aca4e9bb358a3655fc3714b"}'></script>
+</body>
+</html>
